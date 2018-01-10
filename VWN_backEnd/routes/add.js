@@ -35,7 +35,7 @@ router.post('/add', (req, res) => {
     queryPromise(`
         INSERT INTO
             org
-                (name, description_company, logo, active, approved)
+                (name, description, logo, active, approved)
         VALUES
             (?, ?, ?, ?, ?)
     `, [data.Name, data.Description, data.Logo, 1, 0]).then(results => {

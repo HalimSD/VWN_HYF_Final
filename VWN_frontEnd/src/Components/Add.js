@@ -8,6 +8,7 @@ import ArrowForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import Map from './Map';
 import TagsCheckBoxes from './TagsCheckBoxes';
 import Snackbar from 'material-ui/Snackbar';
+import SuccessfullAdd from './SuccessfullAdd';
 
 class Add extends Component {
   constructor(props) {
@@ -136,6 +137,11 @@ class Add extends Component {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           // showMessage('The new organization has been successfully added!', 'color_green');
+          return(
+            <div>
+              <SuccessfullAdd />
+            </div>
+          )
         }
         else if (xhr.status === 500) {
 
@@ -307,6 +313,17 @@ class Add extends Component {
                         type="Text"
                         onChange={this.handleChangeThirdStep}
                         value={formData.selectedRegions[region]["Phone"]}
+                        validators={['required']}
+                        errorMessages={['this field is required', 'please type a valid name']}
+                      /><br />
+                      <TextValidator
+                        name="City"
+                        id={region}
+                        floatingLabelText="City:"
+                        floatingLabelFixed={true}
+                        type="Text"
+                        onChange={this.handleChangeThirdStep}
+                        value={formData.selectedRegions[region]["City"]}
                         validators={['required']}
                         errorMessages={['this field is required', 'please type a valid name']}
                       /><br />
