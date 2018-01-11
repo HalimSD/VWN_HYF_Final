@@ -5,41 +5,41 @@ const express = require('express');
 const router = express.Router();
 const config = JSON.parse(fs.readFileSync('config-secret.json'))
 const connection = mysql.createConnection({
-    host: config.host,
-    user: config.user,
-    password: config.password,
-    port: config.port,
-    database: config.database
+  host: config.host,
+  user: config.user,
+  password: config.password,
+  port: config.port,
+  database: config.database
 });
 connection.connect();
 const queryPromise = (queryBody) => {
-    return new Promise((resolve, reject) => {
-        connection.query(queryBody, (error, results, fields) => {
-            if (error) {
-                reject({
-                    error
-                });
-            } else {
-                resolve(results);
-            }
+  return new Promise((resolve, reject) => {
+    connection.query(queryBody, (error, results, fields) => {
+      if (error) {
+        reject({
+          error
         });
+      } else {
+        resolve(results);
+      }
     });
+  });
 }
 router.get('/search', (req, res) => {
-    const tags = {};
-    const orgs = {};
-    const regions = [];
-    queryPromise(`
+  const tags = {};
+  const orgs = {};
+  const regions = [];
+  queryPromise(`
         SELECT
             id, name
         FROM
             tag
     `).then(results => {
-        
-        results.forEach(result => {
-            tags[result.id] = result.name;
-        });
-        return queryPromise(`
+
+      results.forEach(result => {
+        tags[result.id] = result.name;
+      });
+      return queryPromise(`
             SELECT
                 id, name, description, logo
             FROM
@@ -50,17 +50,17 @@ router.get('/search', (req, res) => {
                     approved = 1
         `);
     }).then(results => {
-        results.forEach(result => {
-            orgs[result.id] = {
-                name: result.name,
-                logo: result.logo,
-                description: result.description,
-                tags: [],
-                regions: [],
-                contacts: []
-            };
-        });
-        return queryPromise(`
+      results.forEach(result => {
+        orgs[result.id] = {
+          name: result.name,
+          logo: result.logo,
+          description: result.description,
+          tags: [],
+          regions: [],
+          contacts: []
+        };
+      });
+      return queryPromise(`
             SELECT
                 org_id, region_id
             FROM
@@ -75,11 +75,10 @@ router.get('/search', (req, res) => {
                     active = 1
         `);
     }).then(results => {
-        
-            results.forEach(result => {
-                orgs[result.org_id].regions.push(result.region_id);
-            });
-        return queryPromise(`
+      results.forEach(result => {
+        orgs[result.org_id].regions.push(result.region_id);
+      });
+      return queryPromise(`
             SELECT
                 org_id, tag_id
             FROM
@@ -94,11 +93,10 @@ router.get('/search', (req, res) => {
                     active = 1
         `);
     }).then(results => {
-        console.log(results)
-        results.forEach(result => {
-            orgs[result.org_id].tags.push(result.tag_id);
-        });
-        return queryPromise(`
+      results.forEach(result => {
+        orgs[result.org_id].tags.push(result.tag_id);
+      });
+      return queryPromise(`
             SELECT
                 org_id, phone, email, web, post_code, city, house_number,
                 contact.id AS contact_id
@@ -114,29 +112,29 @@ router.get('/search', (req, res) => {
                     active = 1
         `);
     }).then(results => {
-        results.forEach(result => {
-            orgs[result.org_id].contacts.push({
-                id: result.contact_id,
-                phone: result.phone,
-                email: result.email,
-                web: result.web,
-                post_code: result.post_code,
-                city: result.city,
-                house_number: result.house_number
-            });
+      results.forEach(result => {
+        orgs[result.org_id].contacts.push({
+          id: result.contact_id,
+          phone: result.phone,
+          email: result.email,
+          web: result.web,
+          post_code: result.post_code,
+          city: result.city,
+          house_number: result.house_number
         });
-        console.log(res.json({
-            tags,
-            orgs,   
-            regions
-        }))
-        res.json({
-            tags,
-            orgs
-        });   
-}).catch(error => {
-    res.status(500).send();
-});
+      });
+      console.log(res.json({
+        tags,
+        orgs,
+        regions
+      }))
+      res.json({
+        tags,
+        orgs
+      });
+    }).catch(error => {
+      res.status(500).send();
+    });
 
 });
 module.exports = router;
