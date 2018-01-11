@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
 import Badge from 'material-ui/Badge';
@@ -6,6 +7,7 @@ import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import ErrorPage from '../Components/ErrorPage';
 
 
 const styles = {
@@ -21,10 +23,20 @@ const styles = {
 };
 
 class Admin extends Component {
-
+  static propTypes = {
+    response: PropTypes.object.isRequired,
+    serverLink: PropTypes.string.isRequired
+  };
   constructor(props) {
     super(props);
+    this.newOrgs = this.props.response.orgs
+    this.componentDidCatchtags = this.props.response.tags
+    this.myToken = this.props.response.myToken
     this.state = {
+      selectedOrgId: false,
+      canClick: true,
+      status: 0,
+      deleteIsClicked: false,
       value: 'a',
       orgs: {},
       open: false,
@@ -32,9 +44,11 @@ class Admin extends Component {
   }
 
   componentWillMount() {
-    this.setState({
-      orgs: this.props.orgs
-    })
+console.log (this.props.response)
+this.setState({
+  orgs: this.props.response.orgs,
+  tags: this.props.response.tags   
+})
   }
 
   handleChange = (value) => {
@@ -55,8 +69,37 @@ class Admin extends Component {
   }
 
   handleDialogClose = () => {
-    this.setState({open: false});
+    this.setState({ open: false });
   };
+
+  sendRequest = (method, path) => {
+    this.setState(Object.assign({}, this.state, { canClick: false }));
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, `${this.props.serverLink}${path}`, true);
+    xhr.setRequestHeader('Authorization', `Bearer ${this.myToken}`);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          const newOrgs = {};
+          Object.keys(this.orgs).forEach(orgId => {
+            if (orgId !== this.state.selectedOrgId) {
+              newOrgs[orgId] = this.state.orgs[orgId];
+            }
+          });
+          this.orgs = newOrgs;
+        }
+        this.setState(Object.assign({}, this.state, {
+          status: xhr.status,
+          canClick: true,
+          selectedOrgId: false,
+          deleteIsClicked: false
+        }));
+      }
+    };
+    xhr.send(JSON.stringify({ orgId: this.state.selectedOrgId }));
+  }
+
 
   render() {
 
@@ -73,8 +116,11 @@ class Admin extends Component {
         onClick={this.handleDialogClose}
       />,
     ];
-    const orgs = this.state.orgs
-    return (
+    let orgs = this.state.orgs
+    console.log (orgs)
+    if (this.state.status === 401 || this.state.status === 404 || this.state.status === 500) {
+      return <ErrorPage status={this.state.status} />;
+    } else return (
       <div className="adminPage">
         <Badge
           badgeContent={10}
@@ -88,7 +134,7 @@ class Admin extends Component {
             <Tab label="Active Organizations" value="a">
               <div>
                 <h2 style={styles.headline}>Active Organizations:</h2>
-                {Object.keys(orgs).map((org) => {
+                {Object.keys(this.state.orgs).map(org => {
                   return (
                     <div key={org}>
                       <Chip
@@ -101,7 +147,8 @@ class Admin extends Component {
                       </Chip>
                     </div>
                   )
-                })}
+                } )} 
+            }
               </div>
             </Tab>
             <Tab label="Requests" value="b">

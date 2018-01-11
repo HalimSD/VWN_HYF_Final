@@ -5,10 +5,12 @@ import Orgs from './Components/Orgs';
 import Header from './Components/Header';
 import LandingPage from './Components/LandingPage';
 import Add from './Components/Add';
-import Admin from './Components/Admin';
+// import Admin from './Components/Admin';
+import Login from './Components/Login';
 import Observable from './Observable';
+import Loading from './Components/Loading';
 import './CSS/App.css';
-
+import './CSS/Login.css';
 class App extends Component {
 
   constructor(props) {
@@ -47,10 +49,10 @@ class App extends Component {
           <Router>
             <div>
               <LandingPage data={orgs} />
-              <Route className ="route" exact path="/admin" component={() => {
+              <Route className ="route" exact path="/login" component={() => {
                 return(
-                  <div>
-                    <Admin className="admin-page" orgs={orgs} />
+                  <div className="login">
+                    <Login/>
                   </div>
                 );
               }} />
@@ -75,7 +77,7 @@ class App extends Component {
 
       );
     }
-    else { return (<div>{this.state.status}</div>) }
+    else { return (<div><Loading/></div>) }
   }
 }
 
