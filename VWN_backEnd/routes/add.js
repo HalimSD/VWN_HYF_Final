@@ -13,11 +13,11 @@ const connection = mysql.createConnection({
     port: config.port,
     database: config.database
 });
-
 connection.connect();
-console.log('connection')
 const queryPromise = (queryBody, values) => {
+    
     return new Promise((resolve, reject) => {
+        console.log("here")
         connection.query(queryBody, values, (error, results, fields) => {
             if (error) {
                 reject({error});
@@ -29,13 +29,14 @@ const queryPromise = (queryBody, values) => {
     });
 }
 router.post('/add', (req, res) => {
+    console.log("here")
     const data = req.body;
     console.log(data)
     let insertedOrgId;
     queryPromise(`
         INSERT INTO
             org
-                (name, description_company, logo, active, approved)
+                (name, description, logo, active, approved)
         VALUES
             (?, ?, ?, ?, ?)
     `, [data.Name, data.Description, data.Logo, 1, 0]).then(results => {
