@@ -126,7 +126,7 @@ class Add extends Component {
   }
 
   handleSubmit = () => {
-    const serverLink = 'http://localhost:8080/'
+    const serverLink = 'http://localhost:8080/add'
     const { formData } = this.state
     const xhr = new XMLHttpRequest();
     xhr.open('Post', serverLink, true);
