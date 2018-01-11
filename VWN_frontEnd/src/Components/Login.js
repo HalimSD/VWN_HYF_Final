@@ -77,7 +77,7 @@ class Login extends Component {
           </div>
         );
       } else if (this.state.status === 1) {
-        return <Loading />;
+        return (<Loading />);
       }
       if (this.state.status === 401 || this.state.status === 404 || this.state.status === 500) {
         return <ErrorPage status={this.state.status} />;
