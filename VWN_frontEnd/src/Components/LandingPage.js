@@ -3,9 +3,10 @@ import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import Route from 'react-router-dom/Route';
-import { Responsive, WidthProvider } from 'react-grid-layout';
+// import { Responsive, WidthProvider } from 'react-grid-layout';
+import '../CSS/LandingPage.css';
 
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
+// const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class LandingPage extends Component {
     constructor(props) {
@@ -32,38 +33,32 @@ class LandingPage extends Component {
             <div>
                     <Route className="route" exact path="/" component={(props) => {
                         return (
-                            <div>
-                                <RaisedButton label="Login as an admin" onClick={() => props.history.push('/admin')} />
-                                <RaisedButton label="View Organizations" onClick={() => props.history.push('/organizations')} />
-                                <RaisedButton label="Add your organization" onClick={() => props.history.push('/add')} />
+                            <div className = "landingPageBTNs">
+                                <RaisedButton className = "BTN" label="Login as an admin" onClick={() => props.history.push('/admin')} />
+                                <RaisedButton className = "BTN" label="View Organizations" onClick={() => props.history.push('/organizations')} />
+                                <RaisedButton className = "BTN" label="Add your organization" onClick={() => props.history.push('/add')} />
 
                             </div>
                         );
                     }} />
                 <Route className='route' exact path='/' component={(props) => {
                     return(
-                <ResponsiveReactGridLayout className='layout'
-                layout={{ x: 1, y: 3, w: 3, h: 3 }}
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 3, md: 3, sm: 3, xs: 3, xxs: 3 }}
-                autoSize={true}
-                compactType ='horizontal'
-                preventCollision={true}
-            >
+
+                <div className = "orgContainer">
                 {Object.keys(data).map((org) => {
                     return (
-                        <div key={org}>
+                        <div key={org} className= "org">
                             <Paper style={style} zDepth={1} circle={true} children={
                                 <div>
                                     <Avatar src={data[org]['logo']} size={100} />
-                                    <h1>{data[org]['name']}</h1>
+                                    <h3>{data[org]['name']}</h3>
                                 </div>
                             } />
                         </div>
                     )
                 }
                 )}
-            </ResponsiveReactGridLayout>
+            </div>
                     );
                 }} />
             </div >

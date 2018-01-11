@@ -127,8 +127,9 @@ class Add extends Component {
   }
 
   handleSubmit = () => {
-    const serverLink = 'http://localhost:8080/'
+    const serverLink = 'http://localhost:8080/add'
     const { formData } = this.state
+    const { stepIndex } = this.state;
     const xhr = new XMLHttpRequest();
     xhr.open('Post', serverLink, true);
     xhr.setRequestHeader("Content-type", "application/json");
@@ -136,12 +137,10 @@ class Add extends Component {
       console.log(JSON.stringify(formData))
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
+          console.log("success")
           // showMessage('The new organization has been successfully added!', 'color_green');
-          return(
-            <div>
-              <SuccessfullAdd />
-            </div>
-          )
+          this.setState({ stepIndex: stepIndex + 1 });
+
         }
         else if (xhr.status === 500) {
 
@@ -370,11 +369,15 @@ class Add extends Component {
             </ValidatorForm>
           </div>
         );
+        case 3:
+        return(
+          <SuccessfullAdd />
+        );
     }
   }
 
   render() {
-    const { stepIndex } = this.state;
+    const { stepIndex, fourthStepLabel } = this.state;
     return (
       <div className="add-page-container" style={{ width: '100%', maxWidth: 700, margin: 'auto' }}>
         <Stepper activeStep={stepIndex} connector={<ArrowForwardIcon />}>
@@ -388,6 +391,10 @@ class Add extends Component {
 
           <Step>
             <StepLabel>Please fill in your contact details:</StepLabel>
+          </Step>
+
+          <Step>
+            <StepLabel>Request Status</StepLabel>
           </Step>
         </Stepper>
         {this.getStepContent(stepIndex)}
