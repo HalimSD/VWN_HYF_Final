@@ -84,7 +84,7 @@ class Login extends Component {
       } else if (this.state.status === 200) {
         return (
           <div>
-            <Admin response={this.state.response} serverLink={this.serverLink} />
+            <Admin orgs={this.props.orgs} response={this.state.response} serverLink={this.serverLink} />
           </div>
         )
       }

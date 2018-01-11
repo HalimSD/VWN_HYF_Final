@@ -52,7 +52,7 @@ class App extends Component {
               <Route className ="route" exact path="/login" component={() => {
                 return(
                   <div className="login">
-                    <Login/>
+                    <Login orgs={orgs}/>
                   </div>
                 );
               }} />
