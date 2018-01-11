@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text} from 'react-native-animatable';
+// import {Text} from 'react-native-animatable';
 
 class SuccessfullAdd extends Component {
   constructor(props) {
@@ -20,8 +20,8 @@ class SuccessfullAdd extends Component {
 
     return (
       <div>
-<Text animation="slideInDown" iterationCount={5} direction="alternate">You did it</Text>
-<Text animation="pulse" easing="ease-out" iterationCount="infinite" style={{ textAlign: 'center' }}>❤️</Text>
+{/* <Text animation="slideInDown" iterationCount={5} direction="alternate">You did it</Text> */}
+{/* <Text animation="pulse" easing="ease-out" iterationCount="infinite" style={{ textAlign: 'center' }}>❤️</Text> */}
         </div>
 
     );
