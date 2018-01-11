@@ -8,6 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import ErrorPage from '../Components/ErrorPage';
+import Observable from '../Observable';
 
 
 const styles = {
@@ -38,17 +39,20 @@ class Admin extends Component {
       status: 0,
       deleteIsClicked: false,
       value: 'a',
+      newOrgs: {},
       orgs: {},
+      newTags: {},
       open: false,
     };
   }
 
   componentWillMount() {
-console.log (this.props.response)
-this.setState({
-  orgs: this.props.response.orgs,
-  tags: this.props.response.tags   
-})
+    console.log(this.props.orgs)
+    this.setState({
+      orgs: this.props.orgs,
+      newOrgs: this.props.response.orgs,
+      newTags: this.props.response.tags
+    })
   }
 
   handleChange = (value) => {
@@ -62,10 +66,17 @@ this.setState({
     alert("to show more info please go to the orgs main page");
   }
 
-  handleRequestDelete = () => {
+  handleRequestDelete = (key) => {
+    console.log(key)
+
     this.setState({
-      open: true
+      open: true,
+      selectedOrgId: key
     });
+  }
+
+  handleDeletOrg = (event) => {
+    this.sendRequest('delete', 'remove')
   }
 
   handleDialogClose = () => {
@@ -81,19 +92,10 @@ this.setState({
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          const newOrgs = {};
-          Object.keys(this.orgs).forEach(orgId => {
-            if (orgId !== this.state.selectedOrgId) {
-              newOrgs[orgId] = this.state.orgs[orgId];
-            }
-          });
-          this.orgs = newOrgs;
+console.log("deleted")
         }
         this.setState(Object.assign({}, this.state, {
           status: xhr.status,
-          canClick: true,
-          selectedOrgId: false,
-          deleteIsClicked: false
         }));
       }
     };
@@ -102,7 +104,7 @@ this.setState({
 
 
   render() {
-
+    let { newOrgs, orgs } = this.state
     const actions = [
       <FlatButton
         label="Cancel"
@@ -113,55 +115,71 @@ this.setState({
         label="Yes"
         primary={true}
         keyboardFocused={true}
-        onClick={this.handleDialogClose}
+        onClick={this.handleDeletOrg}
       />,
     ];
-    let orgs = this.state.orgs
-    console.log (orgs)
+
     if (this.state.status === 401 || this.state.status === 404 || this.state.status === 500) {
       return <ErrorPage status={this.state.status} />;
     } else return (
       <div className="adminPage">
+
+
         <Badge
-          badgeContent={10}
+          badgeContent={Object.keys(newOrgs).length}
           secondary={true}
           badgeStyle={{ top: 12, right: 12 }}
         >
-          <Tabs
-            value={this.state.value}
-            onChange={this.handleChange}
+          <SwipeableViews
+            index={this.state.slideIndex}
+            onChangeIndex={this.handleChange}
           >
-            <Tab label="Active Organizations" value="a">
-              <div>
-                <h2 style={styles.headline}>Active Organizations:</h2>
-                {Object.keys(this.state.orgs).map(org => {
+            <Tabs
+              value={this.state.value}
+              onChange={this.handleChange}
+            >
+
+              <Tab label="Active Organizations" value="a">
+                <div>
+                  <h2 style={styles.headline}>Active Organizations:</h2>
+                  {Object.keys(orgs).map(org => {
+                    return (
+                      <div key={org}>
+                        <Chip
+                          onRequestDelete={this.handleRequestDelete}
+                          onClick={this.handleClick}
+                          style={styles.chip}
+                        >
+                          <Avatar src={orgs[org]["logo"]} />
+                          {orgs[org]["name"]}
+                        </Chip>
+                      </div>
+                    )
+                  })
+                  }
+                </div>
+              </Tab>
+              <Tab label="Requests" value="b">
+                {Object.keys(newOrgs).map(newOrg => {
                   return (
-                    <div key={org}>
+                    <div key={newOrg}>
                       <Chip
-                        onRequestDelete={this.handleRequestDelete}
+                        key={newOrg}
+                        onRequestDelete={() => this.handleRequestDelete(newOrg)}
                         onClick={this.handleClick}
                         style={styles.chip}
                       >
-                        <Avatar src={orgs[org]["logo"]} />
-                        {orgs[org]["name"]}
+                        <Avatar src={newOrgs[newOrg]["logo"]} />
+                        {newOrgs[newOrg]["name"]}
                       </Chip>
-                    </div>
+                      </div>
                   )
-                } )} 
-            }
-              </div>
-            </Tab>
-            <Tab label="Requests" value="b">
-              <div>
-                <h2 style={styles.headline}>Controllable Tab B</h2>
-                <p>
-                  This is another example of a controllable tab. Remember, if you
-              use controllable Tabs, you need to give all of your tabs values or else
-              you wont be able to select them.
-            </p>
-              </div>
-            </Tab>
-          </Tabs>
+                })
+                }
+              </Tab>
+
+            </Tabs>
+          </SwipeableViews>
         </Badge>
         <Dialog
           title="Dialog With Actions"
@@ -172,18 +190,8 @@ this.setState({
         >
           Are you sure you want to delete this organization ?
         </Dialog>
-        <SwipeableViews
-          index={this.state.slideIndex}
-          onChangeIndex={this.handleChange}
-        >
-          <div>
-            <h2 style={styles.headline}>Tabs with slide effect</h2>
-            Swipe to see the next slide.<br />
-          </div>
-          <div style={styles.slide}>
-            slide n°2
-          </div>
-        </SwipeableViews>
+
+
       </div>
     );
   }

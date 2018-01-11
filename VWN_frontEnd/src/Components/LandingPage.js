@@ -34,7 +34,7 @@ class LandingPage extends Component {
                     <Route className="route" exact path="/" component={(props) => {
                         return (
                             <div className = "landingPageBTNs">
-                                <RaisedButton className = "BTN" label="Login as an admin" onClick={() => props.history.push('/admin')} />
+                                <RaisedButton className = "BTN" label="Login as an admin" onClick={() => props.history.push('/login')} />
                                 <RaisedButton className = "BTN" label="View Organizations" onClick={() => props.history.push('/organizations')} />
                                 <RaisedButton className = "BTN" label="Add your organization" onClick={() => props.history.push('/add')} />
 
