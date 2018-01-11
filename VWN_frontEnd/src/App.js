@@ -11,7 +11,6 @@ import Observable from './Observable';
 import Loading from './Components/Loading';
 import './CSS/App.css';
 import './CSS/Login.css';
-import {Spinner} from 'react-spinkit';
 
 
 class App extends Component {
