@@ -82,7 +82,7 @@ h1 {
     width: 14.3em;
     white-space: nowrap;
     overflow: hidden;
-    border-right: .1em solid red;
+    border-right: .1em solid black;
     -webkit-animation: typing 5s steps(28, end), /* # of steps = # of characters */
     blink-caret 1s step-end infinite;
     -moz-animation: typing 5s steps(28, end), /* # of steps = # of characters */
