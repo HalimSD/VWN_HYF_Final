@@ -59,6 +59,8 @@ class Add extends Component {
         case region:
         regions[region][name] = value
           break;
+          default: break
+        
         }
     }
     // console.log("fff",formData)
@@ -173,7 +175,7 @@ class Add extends Component {
   }
 
   getStepContent(stepIndex) {
-    const URLregex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
+    const URLregex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w-]+)+[\w\-_~:/?#[\]@!',;=.]+$/
     const { formData, tags } = this.state
     switch (stepIndex) {
       case 0:

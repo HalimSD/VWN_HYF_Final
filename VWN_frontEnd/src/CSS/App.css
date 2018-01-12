@@ -8,4 +8,11 @@
     font-weight: bolder;
     font-style: normal;
 }
-
+.switch-wrapper {
+    position: relative;
+  }
+  
+  .switch-wrapper > div {
+    position: absolute;
+  }
+  

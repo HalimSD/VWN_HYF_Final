@@ -1,16 +1,127 @@
-.landingPageBTNs{
+@import url('https://fonts.googleapis.com/css?family=Muli');
+
+.landingPageBTNs {
     margin: auto
+}
+body{
+    background-color: lightgray;
 }
 .orgContainer {
     /* background-color: #e9e8e3; */
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-        grid-gap: 10px;
-        grid-auto-rows: minmax(100px, auto);
-    }
-.org{
-    background-color: #f48101;
+    grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+}
+
+.org {
     border-radius: 50%;
     z-index: 10;
+    /* display: flex;
+    flex-wrap: wrap */
+}
 
+.main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: auto
+}
+
+.youtube {
+    margin: auto;
+    margin-top: 40px;
+    /* margin-left: 50% */
+}
+
+@-webkit-keyframes typing {
+    from {
+        width: 0
+    }
+    to {
+        width: 14.3em
+    }
+}
+
+@-moz-keyframes typing {
+    from {
+        width: 0
+    }
+    to {
+        width: 14.3em
+    }
+}
+
+@-webkit-keyframes blink-caret {
+    from,
+    to {
+        border-color: transparent
+    }
+    50% {
+        border-color: black
+    }
+}
+
+@-moz-keyframes blink-caret {
+    from,
+    to {
+        border-color: transparent
+    }
+    50% {
+        border-color: black
+    }
+}
+
+body {
+    font-family: Consolas, monospace;
+}
+
+h1 {
+    margin-top: 40px;
+    font-size: 150%;
+    width: 14.3em;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: .1em solid red;
+    -webkit-animation: typing 5s steps(28, end), /* # of steps = # of characters */
+    blink-caret 1s step-end infinite;
+    -moz-animation: typing 5s steps(28, end), /* # of steps = # of characters */
+    blink-caret 1s step-end infinite;
+}
+
+.front,
+.back {
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+    -webkit-transition: -webkit-transform 300ms;
+    transition: -webkit-transform 300ms;
+    transition: transform 300ms;
+    transition: transform 300ms, -webkit-transform 300ms;
+    -webkit-transition-timing-function: linear;
+            transition-timing-function: linear;
+    border-radius: 5px;
+}
+.front {
+    transform: rotateY(0deg);
+    background: -webkit-linear-gradient(top left, #84DD63, #009970);
+    background: linear-gradient(to bottom right, #84DD63, #009970);
+    text-align: center;
+    padding: 30px;
+}
+.back {
+    background: -webkit-linear-gradient(top left, #009970, #84DD63);
+    background: linear-gradient(to bottom right, #009970, #84DD63);
+    -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+    padding: 40px 15px;
+    color: #fff;
+}
+
+.card:hover .front {
+    -webkit-transform: rotateY(-180deg);
+            transform: rotateY(-180deg);
+}
+.card:hover .back {
+    -webkit-transform: rotateY(0deg);
+            transform: rotateY(0deg);
 }

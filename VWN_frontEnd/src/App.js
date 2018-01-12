@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import Router from 'react-router-dom/BrowserRouter';
+import { AnimatedSwitch } from 'react-router-transition';
+import Route from 'react-router-dom/Route';
 import Orgs from './Components/Orgs';
 import Header from './Components/Header';
 import LandingPage from './Components/LandingPage';
@@ -49,6 +52,12 @@ class App extends Component {
       return (
         <MuiThemeProvider>
           <Router>
+          <AnimatedSwitch
+      atEnter={{ opacity: 0 }}
+      atLeave={{ opacity: 0 }}
+      atActive={{ opacity: 1 }}
+      className="switch-wrapper"
+    >
             <div>
               <LandingPage data={orgs} />
               <Route className ="route" exact path="/login" component={() => {
@@ -74,7 +83,9 @@ class App extends Component {
                 );
               }} />
             </div>
+            </AnimatedSwitch>
           </Router>
+          
         </MuiThemeProvider>
 
       );
