@@ -9,6 +9,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import ErrorPage from '../Components/ErrorPage';
 import Observable from '../Observable';
+import '../CSS/Admin.css';
 
 
 const styles = {
@@ -92,7 +93,7 @@ class Admin extends Component {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-console.log("deleted")
+          console.log("deleted")
         }
         this.setState(Object.assign({}, this.state, {
           status: xhr.status,
@@ -102,6 +103,28 @@ console.log("deleted")
     xhr.send(JSON.stringify({ orgId: this.state.selectedOrgId }));
   }
 
+  renderOrgs = (orgs) => {
+    return (
+      <div className="orgContainer">
+        {Object.keys(orgs).map(org => {
+          return (
+              <Chip
+              key={org}
+                onRequestDelete={this.handleRequestDelete}
+                onClick={this.handleClick}
+                style={styles.chip}
+                className="orgChip"
+              >
+                <Avatar src={orgs[org]["logo"]} />
+                {orgs[org]["name"]}
+              </Chip>
+          );
+        }
+        )
+        }
+      </div>
+    );
+  }
 
   render() {
     let { newOrgs, orgs } = this.state
@@ -123,64 +146,34 @@ console.log("deleted")
       return <ErrorPage status={this.state.status} />;
     } else return (
       <div className="adminPage">
-
-
-        <Badge
-          badgeContent={Object.keys(newOrgs).length}
-          secondary={true}
-          badgeStyle={{ top: 12, right: 12 }}
+        <SwipeableViews
+          className="tabsContainer"
+          index={this.state.slideIndex}
+          onChangeIndex={this.handleChange}
         >
-          <SwipeableViews
-            index={this.state.slideIndex}
-            onChangeIndex={this.handleChange}
+          <Tabs
+            className="tabs"
+            value={this.state.value}
+            onChange={this.handleChange}
           >
-            <Tabs
-              value={this.state.value}
-              onChange={this.handleChange}
+            <Tab label="Active Organizations" value="a">
+              <div>
+                <h2 style={styles.headline}>Active Organizations:</h2>
+                {this.renderOrgs(orgs)}
+              </div>
+            </Tab>
+            <Tab label="Requests" value="b" icon={<Badge
+              className="badge"
+              badgeContent={Object.keys(newOrgs).length}
+              secondary={true}
+              badgeStyle={{ top: 1, right: 1 }}
             >
+            </Badge>}>
+              {this.renderOrgs(newOrgs)}
+            </Tab>
 
-              <Tab label="Active Organizations" value="a">
-                <div>
-                  <h2 style={styles.headline}>Active Organizations:</h2>
-                  {Object.keys(orgs).map(org => {
-                    return (
-                      <div key={org}>
-                        <Chip
-                          onRequestDelete={this.handleRequestDelete}
-                          onClick={this.handleClick}
-                          style={styles.chip}
-                        >
-                          <Avatar src={orgs[org]["logo"]} />
-                          {orgs[org]["name"]}
-                        </Chip>
-                      </div>
-                    )
-                  })
-                  }
-                </div>
-              </Tab>
-              <Tab label="Requests" value="b">
-                {Object.keys(newOrgs).map(newOrg => {
-                  return (
-                    <div key={newOrg}>
-                      <Chip
-                        key={newOrg}
-                        onRequestDelete={() => this.handleRequestDelete(newOrg)}
-                        onClick={this.handleClick}
-                        style={styles.chip}
-                      >
-                        <Avatar src={newOrgs[newOrg]["logo"]} />
-                        {newOrgs[newOrg]["name"]}
-                      </Chip>
-                      </div>
-                  )
-                })
-                }
-              </Tab>
-
-            </Tabs>
-          </SwipeableViews>
-        </Badge>
+          </Tabs>
+        </SwipeableViews>
         <Dialog
           title="Dialog With Actions"
           actions={actions}
@@ -190,8 +183,6 @@ console.log("deleted")
         >
           Are you sure you want to delete this organization ?
         </Dialog>
-
-
       </div>
     );
   }
