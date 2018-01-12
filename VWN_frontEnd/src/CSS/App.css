@@ -2,9 +2,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    box-sizing: content-box;
+    font-family: 'SolexRegular';
+    list-style-type: none;
+    font-size: 100%;
+    font-weight: bolder;
+    font-style: normal;
 }
 
-.app-home-container {
-    background-color: #e9e8e3;
-}

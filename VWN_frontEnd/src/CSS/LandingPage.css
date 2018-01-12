@@ -2,7 +2,7 @@
     margin: auto
 }
 .orgContainer {
-    background-color: #e9e8e3;
+    /* background-color: #e9e8e3; */
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 10px;
